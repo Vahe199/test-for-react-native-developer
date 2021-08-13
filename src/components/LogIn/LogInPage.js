@@ -1,23 +1,32 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {AntDesign, EvilIcons, Feather} from '@expo/vector-icons';
 import {Formik} from 'formik';
 import * as Yup from "yup";
 import {getUserData} from "../../redux/action_creator/auth-action";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 const SignupSchema = Yup.object().shape({
     login: Yup.string()
         .required('Required'),
 });
-const SignInPage = ({navigation}) => {
+const LoginPage = ({navigation}) => {
 const dispatch = useDispatch()
+    const [err, setErr] = useState(false)
+    const {error,user} = useSelector(state => state.auth)
+useEffect(()=>{
+    if(error){
+        setErr(true)
+    }else if(user){
+        navigation.navigate('Users')
+    }
+},[error,user])
     const sendFormData = async (values) => {
         await dispatch(getUserData(values.login))
-        navigation.navigate('User')
     }
     return (<View style={styles.container}>
         <View style={styles.header}>
+            {err &&<Text style={styles.err}>Incorrect Login Name</Text>}
             <Text style={styles.text_header}>Welcome!</Text>
         </View>
         <View style={styles.footer}>
@@ -158,6 +167,12 @@ const styles = StyleSheet.create({
         fontSize:11,
 
     },
+    err:{
+        textAlign: 'center',
+        fontSize:22,
+        fontWeight:'bold',
+        color:'red'
+    }
 })
 
-export default SignInPage;
+export default LoginPage;

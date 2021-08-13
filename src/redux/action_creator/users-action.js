@@ -1,19 +1,16 @@
 import {AuthApi} from "../../api/api";
-import {AsyncStorage} from "react-native";
+
+const  FETCH_USERS_DATA = 'FETCH_USERS_DATA';
+const FETCH_USERS_DATA_SUCCESS = 'FETCH_USERS_DATA_SUCCESS';
+const  FETCH_USERS_DATA_ERROR = 'FETCH_USERS_DATA_ERROR';
 
 
-const  GET_USER_DATA = 'GET_USER_DATA';
-const GET_USER_DATA_SUCCESS = 'GET_USER_DATA_SUCCESS';
-const  GET_USER_DATA_ERROR = 'GET_USER_DATA_ERROR';
-
-
-
-export const getUserData = (login) => async (dispatch) => {
+export const FetchUsersData = (pages) => async (dispatch) => {
     try {
-        dispatch({type:GET_USER_DATA})
-        const {data} = await AuthApi.AuthContext(login)
-        dispatch({type:GET_USER_DATA_SUCCESS, payload:data})
+        dispatch({type:FETCH_USERS_DATA})
+        const {data} = await AuthApi.UserContext(pages)
+        dispatch({type:FETCH_USERS_DATA_SUCCESS, payload:data})
     }catch (e) {
-        dispatch({type:GET_USER_DATA_ERROR,payload:'something went wrong'})
+        dispatch({type:FETCH_USERS_DATA_ERROR,payload:'something went wrong'})
     }
 }
